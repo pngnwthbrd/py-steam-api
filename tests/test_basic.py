@@ -4,7 +4,7 @@ from pysteamapi.config import cfg
 
 sys.path.append(os.path.abspath(
                 os.path.join(os.path.dirname(__file__), '..')))
-from steamwishlistscomparison import steam
+from pysteamapi import steam
 
 steam = steam.Steam(steamid = cfg['steam']['steamid'])
 
