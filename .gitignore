@@ -3,3 +3,5 @@ Lib
 pysteamapi/__pycache__
 Scripts
 pyvenv.cfg
+pysteamapi/constans.py
+pysteamapi/config.yml
