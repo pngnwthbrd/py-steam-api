@@ -6,8 +6,8 @@ from pysteamapi import constants
 from pysteamapi.config import cfg
 
 class Steam:
-    _vanityurl = None
-    _steamid = None
+    __vanityurl = None
+    __steamid = None
     _uri_get_friendslist = {
         'url': 'http://api.steampowered.com/ISteamUser' \
                 '/GetFriendList/v0001/',
@@ -17,7 +17,7 @@ class Steam:
             'relationship': 'friend'
         }
     }
-    _uri_get_steamid = {
+    _uri_get__steamid = {
         'url': 'http://api.steampowered.com/ISteamUser' \
                 '/ResolveVanityURL/v0001/',
         'params': {
@@ -43,14 +43,14 @@ class Steam:
         if cfg['steam']['steamid'] is None and cfg['steam']['vanityurl'] is None:
             error += 1
         else:
-            self._vanityurl = cfg['steam']['vanityurl']
-            self._steamid = cfg['steam']['steamid']
+            self.__vanityurl = cfg['steam']['vanityurl']
+            self.__steamid = cfg['steam']['steamid']
 
         if steamid is None and vanityurl is None:
             error +-1
         else:
-            self._vanityurl = vanityurl
-            self._steamid = steamid
+            self.__vanityurl = vanityurl
+            self.__steamid = steamid
 
         if error >= 2:
             print('steamid and vanityurl unknown' \
@@ -58,13 +58,12 @@ class Steam:
 
             sys.exit()
 
-        # get steamid from vanityurl if vanityurl is set
-        if vanityurl is not None:
-            self._steamid = self._get_steamid_by_vanityurl()
+        self._vanityurl_to_steamid()
+
 
     def get_friendslist(self):
         # manipulate params
-        self._uri_get_friendslist['params']['steamid'] = self._steamid
+        self._uri_get_friendslist['params']['steamid'] = self.__steamid
         # get friends list as json response
         r = requests.get(self._uri_get_friendslist['url'],
                          self._uri_get_friendslist['params'])
@@ -76,7 +75,7 @@ class Steam:
     def get_wishlist(self):
         # get wishlist json response
         r = requests.get(self._uri_get_wishlist['url']
-                                .replace('{steamid}', str(self._steamid)))
+                                .replace('{steamid}', str(self.__steamid)))
 
         wishlist = json.JSONDecoder().decode(r.text)
 
@@ -94,17 +93,40 @@ class Steam:
 
         return profile_summary['response']['players']
 
+    def _vanityurl_to_steamid(self):
+        # get steamid from vanityurl if vanityurl is set
+        if self.__vanityurl is not None:
+            self.__steamid = self._get_steamid_by_vanityurl()
+
     def _get_steamid_by_vanityurl(self):
         # TODO: check the None case
-        if self._vanityurl is None:
+        if self.__vanityurl is None:
             pass
 
         # manipulate params
-        self._uri_get_steamid['params']['vanityurl'] = self._vanityurl
+        self._uri_get__steamid['params']['vanityurl'] = self.__vanityurl
         # get steamid json response
-        r = requests.get(self._uri_get_steamid['url'],
-                         self._uri_get_steamid['params'])
+        r = requests.get(self._uri_get__steamid['url'],
+                         self._uri_get__steamid['params'])
 
         steamid = json.JSONDecoder().decode(r.text)
 
         return steamid['response']['steamid']
+
+    @property
+    def steamid(self):
+        return self.__steamid
+
+    @steamid.setter
+    def steamid(self, steamid):
+        self.__steamid = steamid
+
+    @property
+    def vanityurl(self):
+        return self.__vanityurl
+
+    @vanityurl.setter
+    def vanityurl(self, vanityurl):
+        self.__vanityurl = vanityurl
+        # update current steamid
+        self._vanityurl_to_steamid()
