@@ -47,7 +47,7 @@ class Steam:
             self.__steamid = cfg['steam']['steamid']
 
         if steamid is None and vanityurl is None:
-            error +-1
+            error +=1
         else:
             self.__vanityurl = vanityurl
             self.__steamid = steamid
