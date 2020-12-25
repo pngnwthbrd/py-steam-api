@@ -58,6 +58,10 @@ class Steam:
 
             sys.exit()
 
+        # get steamid from vanityurl if vanityurl is set
+        if vanityurl is not None:
+            self.steamid = self._get_steamid_by_vanityurl()
+
     def get_friendslist(self):
         # manipulate params
         self._uri_get_friendslist['params']['steamid'] = self.steamid
