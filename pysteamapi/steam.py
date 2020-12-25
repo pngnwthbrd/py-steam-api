@@ -43,14 +43,14 @@ class Steam:
         if cfg['steam']['steamid'] is None and cfg['steam']['vanityurl'] is None:
             error += 1
         else:
-            self.vanityurl = cfg['steam']['vanityurl']
-            self.steamid = cfg['steam']['steamid']
+            self._vanityurl = cfg['steam']['vanityurl']
+            self._steamid = cfg['steam']['steamid']
 
         if steamid is None and vanityurl is None:
             error +-1
         else:
-            self.vanityurl = vanityurl
-            self.steamid = steamid
+            self._vanityurl = vanityurl
+            self._steamid = steamid
 
         if error >= 2:
             print('steamid and vanityurl unknown' \
@@ -60,11 +60,11 @@ class Steam:
 
         # get steamid from vanityurl if vanityurl is set
         if vanityurl is not None:
-            self.steamid = self._get_steamid_by_vanityurl()
+            self._steamid = self._get_steamid_by_vanityurl()
 
     def get_friendslist(self):
         # manipulate params
-        self._uri_get_friendslist['params']['steamid'] = self.steamid
+        self._uri_get_friendslist['params']['steamid'] = self._steamid
         # get friends list as json response
         r = requests.get(self._uri_get_friendslist['url'],
                          self._uri_get_friendslist['params'])
@@ -76,7 +76,7 @@ class Steam:
     def get_wishlist(self):
         # get wishlist json response
         r = requests.get(self._uri_get_wishlist['url']
-                                .replace('{steamid}', str(self.steamid)))
+                                .replace('{steamid}', str(self._steamid)))
 
         wishlist = json.JSONDecoder().decode(r.text)
 
@@ -96,11 +96,11 @@ class Steam:
 
     def _get_steamid_by_vanityurl(self):
         # TODO: check the None case
-        if self.vanityurl is None:
+        if self._vanityurl is None:
             pass
 
         # manipulate params
-        self._uri_get_steamid['params']['vanityurl'] = self.vanityurl
+        self._uri_get_steamid['params']['vanityurl'] = self._vanityurl
         # get steamid json response
         r = requests.get(self._uri_get_steamid['url'],
                          self._uri_get_steamid['params'])
