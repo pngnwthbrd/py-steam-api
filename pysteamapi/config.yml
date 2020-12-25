@@ -1,5 +1,6 @@
 steam:
     # your steam id
     steamid: # put in steamid
-    # your custom url name if available (comming soon...)
+    # your custom url name if available
+    # (must be set in the steam profile settings)
     vanityurl: # put in vanityurl
