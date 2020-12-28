@@ -1,5 +1,14 @@
+# win dev venv
 Include
 Lib
 pysteamapi/__pycache__
 Scripts
+
+# linux dev venv
+bin
+include
+lib
+lib64
+
+# both
 pyvenv.cfg
