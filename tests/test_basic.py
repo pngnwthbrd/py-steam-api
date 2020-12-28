@@ -1,9 +1,9 @@
 import sys
 import os
-from pysteamapi.config import cfg
 
 sys.path.append(os.path.abspath(
                 os.path.join(os.path.dirname(__file__), '..')))
+from pysteamapi.config import cfg
 from pysteamapi import steam
 
 steam = steam.Steam(steamid = cfg['steam']['steamid'])
